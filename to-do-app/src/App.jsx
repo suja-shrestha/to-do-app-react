@@ -5,31 +5,31 @@ export default function App() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
+    async function loadTodos() {
+      try {
+        const result = await window.storage.get("todos");
+        if (result) {
+          setTodos(JSON.parse(result.value));
+        }
+      } catch (error) {
+        console.log("No todos yet");
+      }
+    }
     loadTodos();
   }, []);
 
   useEffect(() => {
-    saveTodos();
-  }, [todos]);
-
-  async function loadTodos() {
-    try {
-      const result = await window.storage.get("todos");
-      if (result) {
-        setTodos(JSON.parse(result.value));
+    async function saveTodos() {
+      try {
+        await window.storage.set("todos", JSON.stringify(todos));
+      } catch (error) {
+        console.error("Save failed");
       }
-    } catch (error) {
-      console.log("No todos yet");
     }
-  }
-
-  async function saveTodos() {
-    try {
-      await window.storage.set("todos", JSON.stringify(todos));
-    } catch (error) {
-      console.error("Save failed");
+    if (todos.length >= 0) {
+      saveTodos();
     }
-  }
+  }, [todos]);
 
   function handleAdd() {
     if (newItem.trim() === "") return;
