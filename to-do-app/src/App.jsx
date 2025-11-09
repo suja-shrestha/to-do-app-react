@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import './App.css';
 export default function App() {
   const [newItem, setNewItem] = useState("");
   const [todos, setTodos] = useState([]);
